@@ -3,7 +3,6 @@ services:
     name: fiscal-web
     env: python
     buildCommand: "pip install -r requirements.txt"
-    # --- LÍNEA CORREGIDA ---
     startCommand: "gunicorn config.wsgi"
     envVars:
       - key: DATABASE_URL
