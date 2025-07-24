@@ -1,0 +1,77 @@
+{% extends 'cliente_base.html' %}
+
+{% block content %}
+<style>
+    .selector-anual { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 10px; background-color: #f0f2f5; border-radius: 5px;}
+    details { border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; }
+    summary { font-weight: bold; font-size: 1.1em; padding: 10px; background-color: #e9ecef; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 12px; }
+    th { background-color: #f8f9fa; }
+    .uuid-cell { word-break: break-all; font-family: monospace; max-width: 250px; }
+</style>
+
+<h2>Visor de Facturas - Año {{ anio_seleccionado }}</h2>
+
+<form method="get" class="selector-anual">
+    <label for="anio">Seleccionar otro año:</label>
+    <select name="anio" id="anio">
+        {% for anio_opt in anios_disponibles %}
+            <option value="{{ anio_opt }}" {% if anio_opt == anio_seleccionado|stringformat:"s" %}selected{% endif %}>{{ anio_opt }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Ver</button>
+</form>
+<hr>
+
+<h3>Facturas Emitidas (Ingresos)</h3>
+{% for mes_nombre, facturas in ingresos.items %}
+    <details open>
+        <summary>{{ mes_nombre }} ({{ facturas|length }} facturas)</summary>
+        <table>
+            <thead>
+                <tr><th>Fecha</th><th>UUID</th><th>Receptor</th><th>Total</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+            {% for f in facturas %}
+                <tr>
+                    <td>{{ f.Fecha|slice:":10" }}</td>
+                    <td class="uuid-cell">{{ f.UUID }}</td>
+                    <td>{{ f.Nombre_Receptor }}</td>
+                    <td style="text-align: right;">${{ f.Total|floatformat:"2g" }}</td>
+                    <td>{{ f.Estado }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </details>
+{% empty %}
+    <p>No se encontraron facturas emitidas para este periodo.</p>
+{% endfor %}
+
+<h3 style="margin-top: 30px;">Facturas Recibidas (Egresos)</h3>
+{% for mes_nombre, facturas in egresos.items %}
+     <details open>
+        <summary>{{ mes_nombre }} ({{ facturas|length }} facturas)</summary>
+        <table>
+            <thead>
+               <tr><th>Fecha</th><th>UUID</th><th>Emisor</th><th>Total</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+            {% for f in facturas %}
+                <tr>
+                    <td>{{ f.Fecha|slice:":10" }}</td>
+                    <td class="uuid-cell">{{ f.UUID }}</td>
+                    <td>{{ f.Nombre_Emisor }}</td>
+                    <td style="text-align: right;">${{ f.Total|floatformat:"2g" }}</td>
+                    <td>{{ f.Estado }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </details>
+{% empty %}
+    <p>No se encontraron facturas recibidas para este periodo.</p>
+{% endfor %}
+
+{% endblock %}

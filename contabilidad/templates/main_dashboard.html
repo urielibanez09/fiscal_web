@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Principal</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background-color: #f8f9fa; }
+        .header { background-color: white; padding: 15px 30px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; }
+        .content { padding: 40px; }
+        .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .module-card { background-color: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; text-decoration: none; color: #333; transition: transform 0.2s, box-shadow 0.2s; }
+        .module-card:hover { transform: translateY(-5px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .module-card h2 { margin-top: 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Panel de Módulos</h1>
+        <a href="{% url 'logout' %}">Cerrar Sesión</a>
+    </div>
+    <div class="content">
+        <div class="module-grid">
+            
+            {% for modulo in lista_modulos %}
+                {% if 'CLIENTES' in modulo.nombre|upper %}
+                    <a href="{% url 'cliente_list' %}" class="module-card">
+                        <h2>{{ modulo.nombre }}</h2>
+                        <p>Gestiona clientes y calcula sus impuestos.</p>
+                    </a>
+                {% elif 'EVALUACION' in modulo.nombre|upper %}
+                    <a href="{% url 'evaluacion_list' %}" class="module-card">
+                        <h2>{{ modulo.nombre }}</h2>
+                        <p>Realiza las evaluaciones asignadas.</p>
+                    </a>
+                {% else %}
+                    <a href="#" class="module-card" style="background-color: #f0f0f0; color: #999; cursor: not-allowed;">
+                        <h2>{{ modulo.nombre }} (Próximamente)</h2>
+                        <p>{{ modulo.descripcion }}</p>
+                    </a>
+                {% endif %}
+            {% empty %}
+                <p>No tienes módulos asignados. Contacta al administrador.</p>
+            {% endfor %}
+            </div>
+    </div>
+</body>
+</html>

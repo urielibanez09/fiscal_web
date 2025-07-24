@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ active_tab|default:"Detalle" }} de {{ cliente.nombre }}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; background-color: #f8f9fa; }
+        .header { background-color: white; padding: 15px 30px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header a { text-decoration: none; color: #007bff; }
+        .content { padding: 30px; }
+        .tab-nav { display: flex; border-bottom: 2px solid #dee2e6; margin-bottom: -1px; flex-wrap: wrap;}
+        .tab-nav a { padding: 10px 20px; text-decoration: none; color: #495057; border: 2px solid transparent; }
+        .tab-nav a.active { color: #007bff; border-bottom: 2px solid #007bff; font-weight: 600; }
+        .tab-content { background-color: white; padding: 25px; border: 1px solid #dee2e6; min-height: 400px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>{{ cliente.nombre }}</h1>
+            <p style="margin: 0; color: #6c757d;">RFC: {{ cliente.rfc }}</p>
+        </div>
+        <a href="{% url 'cliente_list' %}">← Volver a la Lista de Clientes</a>
+    </div>
+
+    <div class="content">
+        <nav class="tab-nav">
+            {% for modulo in modulos %}
+                {% if modulo.nombre|upper == "DASHBOARD" %}
+                    <a href="{% url 'cliente_dashboard' cliente.id %}" class="{% if active_tab == 'Dashboard' %}active{% endif %}">{{ modulo.nombre }}</a>
+                
+                {% elif modulo.nombre|upper == "EXPEDIENTE" %}
+                    <a href="{% url 'expediente' cliente.id %}" class="{% if active_tab == 'Expediente' %}active{% endif %}">{{ modulo.nombre }}</a>
+
+                {% elif modulo.nombre|upper == "FACTURACION" or modulo.nombre|upper == "CARGA DE XMLS" %}
+                    <a href="{% url 'xml_viewer_default' cliente.id %}" class="{% if active_tab == 'FACTURACION' %}active{% endif %}">{{ modulo.nombre }}</a>
+                
+                {% elif modulo.nombre|upper == "CÁLCULOS FISCALES" or modulo.nombre|upper == "CALCULOS FISCALES" %}
+                    <a href="{% url 'iva' cliente.id %}" class="{% if active_tab == 'Cálculo IVA' %}active{% endif %}">{{ modulo.nombre }}</a>
+
+                {% else %}
+                    <a href="#">{{ modulo.nombre }}</a>
+                {% endif %}
+            {% endfor %}
+        </nav>
+
+        <div class="tab-content">
+            {% block content %}
+            <p>Selecciona un módulo para ver su contenido.</p>
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

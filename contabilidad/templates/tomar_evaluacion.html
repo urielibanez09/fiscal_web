@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Respondiendo: {{ cuestionario.titulo }}</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f8f9fa; }
+        .container { max-width: 800px; margin: auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .timer { text-align: center; font-size: 1.5em; font-weight: bold; color: #d9534f; border: 2px solid #d9534f; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+        .pregunta { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .pregunta p { font-weight: bold; }
+        .opciones label { display: block; margin: 5px 0; }
+        button { font-size: 16px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ cuestionario.titulo }}</h1>
+        <div id="timer" class="timer">Tiempo Restante: {{ cuestionario.tiempo_limite_minutos }}:00</div>
+        <hr>
+
+        <form id="quizForm" method="post" action="{% url 'tomar_evaluacion' cuestionario.id %}">
+            {% csrf_token %}
+
+            {% for pregunta in cuestionario.preguntas.all %}
+                <div class="pregunta">
+                    <p>{{ forloop.counter }}. {{ pregunta.texto }} (Valor: {{ pregunta.valor }} puntos)</p>
+                    <div class="opciones">
+                        {% for opcion in pregunta.opciones.all %}
+                            <label>
+                                <input type="radio" name="pregunta_{{ pregunta.id }}" value="{{ opcion.id }}">
+                                {{ opcion.texto }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <button type="submit">Finalizar y Calificar</button>
+        </form>
+    </div>
+
+    <script>
+        const timerElement = document.getElementById('timer');
+        const quizForm = document.getElementById('quizForm');
+        let timeLeft = {{ cuestionario.tiempo_limite_minutos }} * 60;
+
+        const interval = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+
+            timerElement.textContent = `Tiempo Restante: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                timerElement.textContent = "¡Tiempo terminado!";
+                quizForm.submit(); // Envía el formulario automáticamente
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

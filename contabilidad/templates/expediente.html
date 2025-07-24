@@ -1,0 +1,58 @@
+{% extends 'cliente_base.html' %}
+
+{% block content %}
+    <style>
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .detail-section {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        .detail-section h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            color: #333;
+        }
+        .detail-section p {
+            margin: 5px 0;
+            color: #555;
+        }
+    </style>
+
+    <h2>Expediente del Cliente</h2>
+    <hr>
+
+    <div class="detail-grid">
+        <div class="detail-section">
+            <h3>Información Fiscal y de Contacto</h3>
+            <p><strong>Régimen Fiscal:</strong> {{ cliente.regimen_fiscal|default:"No especificado" }}</p>
+            <p><strong>Fecha de Inicio de Operaciones:</strong> {{ cliente.fecha_inicio_operaciones|default:"No especificada" }}</p>
+            <p><strong>Domicilio:</strong> {{ cliente.domicilio|default:"No especificado" }}</p>
+            <p><strong>Teléfono:</strong> {{ cliente.telefono|default:"No especificado" }}</p>
+            <p><strong>Correo:</strong> {{ cliente.correo|default:"No especificado" }}</p>
+        </div>
+
+        <div class="detail-section">
+            <h3>Información Operativa y Comercial</h3>
+            <p><strong>No. Recurrente:</strong> {{ cliente.no_recurrente|default:"No especificado" }}</p>
+            <p><strong>Tipo:</strong> {{ cliente.tipo|default:"No especificado" }}</p>
+            <p><strong>Estatus:</strong> {{ cliente.estatus|default:"No especificado" }}</p>
+            <p><strong>Tipo de servicio:</strong> {{ cliente.tipo_de_servicio|default:"No especificado" }}</p>
+            <p><strong>Giro Comercial:</strong> {{ cliente.giro_comercial|default:"No especificado" }}</p>
+        </div>
+
+        <div class="detail-section">
+            <h3>Información de Pago y Socios</h3>
+            <p><strong>Forma de Pago:</strong> {{ cliente.forma_de_pago|default:"No especificado" }}</p>
+            <p><strong>Honorarios:</strong> ${{ cliente.honorarios|default:"0.00" }}</p>
+            <p><strong>Socio:</strong> {{ cliente.socio|default:"No especificado" }}</p>
+            <p><strong>Áreas:</strong> {{ cliente.areas|default:"No especificada" }}</p>
+        </div>
+    </div>
+{% endblock %}

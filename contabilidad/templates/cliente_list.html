@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clientes</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f8f9fa; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li a { display: block; text-decoration: none; color: #333; background-color: #fff; border: 1px solid #ddd; margin-top: -1px; padding: 12px; }
+        li a:hover { background-color: #f0f0f0; }
+        a.back-link { text-decoration: none; color: #007bff; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Mis Clientes Asignados</h1>
+        <a href="{% url 'main_dashboard' %}" class="back-link">← Volver al Panel de Módulos</a>
+    </div>
+
+    <ul>
+        {% for cliente in lista_clientes %}
+            <li>
+                <a href="{% url 'cliente_dashboard' cliente.id %}">
+                    <strong>{{ cliente.nombre }}</strong> ({{ cliente.rfc }})
+                </a>
+                </li>
+        {% empty %}
+            <li>No tienes clientes asignados.</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
